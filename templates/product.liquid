@@ -183,6 +183,21 @@
             </div>
         </div>
         {% endif %}
+        {% if product.customer_reviews.size > 0 %}
+        <h4>Customer reviews</h4>
+        {% for review in product.customer_reviews limit: 5 %}
+          {% if review.is_active %}
+            <p>
+            {{ review.content }}
+            <br/>
+            <time pubdate datetime = "{{review.created_date | date: '%y-%m-%d'}}">
+                <em class="text-light"> {{review.created_date | date: format: 'month_day_year'}} </em>
+            </time>
+            </p>
+          {% endif %}
+        {% endfor %}
+        {% endif %}
+
     </div>
 </div>
 
