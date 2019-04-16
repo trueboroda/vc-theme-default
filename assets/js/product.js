@@ -8,6 +8,16 @@ storefrontApp.controller('productController', ['$rootScope', '$scope', '$window'
 
         var allVariations = [];
 
+        $scope.activeTab = "properties";
+
+        $scope.isActiveTab = function (tabName) {
+            return $scope.activeTab === tabName;
+        };
+
+        $scope.setActiveTab = function (tabName) {
+            $scope.activeTab = tabName;
+        };
+
         $scope.selectedVariation = {};
         $scope.allVariationPropsMap = {};
         $scope.productPrice = null;

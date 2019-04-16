@@ -721,6 +721,7 @@
             "quantity": "Quantity",
             "add_to_cart": "Add to Cart",
             "details_tab": "Product details",
+            "reviews_tab":  "Reviews",
             "vat": "Inc VAT",
             "subscription_period": "Subscription with a period:"
         },
