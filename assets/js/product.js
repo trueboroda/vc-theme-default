@@ -8,16 +8,12 @@ storefrontApp.controller('productController', ['$rootScope', '$scope', '$window'
 
         var allVariations = [];
 
-        $scope.activeTab = "properties";
+        var tabsKind = {
+            properties: 'properties',
+            reviews: 'reviews'
+        }
 
-        $scope.isActiveTab = function (tabName) {
-            return $scope.activeTab === tabName;
-        };
-
-        $scope.setActiveTab = function (tabName) {
-            $scope.activeTab = tabName;
-        };
-
+        $scope.activeTab = null;
         $scope.selectedVariation = {};
         $scope.allVariationPropsMap = {};
         $scope.productPrice = null;
@@ -91,6 +87,9 @@ storefrontApp.controller('productController', ['$rootScope', '$scope', '$window'
                 });
 
                 $scope.selectedVariation = product;
+
+                //set start tab
+                $scope.activeTab = product.properties.length > 0 ? tabsKind.properties : tabsKind.reviews;
             });
         };
 
@@ -148,6 +147,14 @@ storefrontApp.controller('productController', ['$rootScope', '$scope', '$window'
 
             //try to find the best variation match for selected properties
             $scope.selectedVariation = findVariationBySelectedProps(allVariations, getSelectedPropsMap($scope.allVariationPropsMap));
+        };
+
+        $scope.isActiveTab = function (tabName) {
+            return $scope.activeTab === tabName;
+        };
+
+        $scope.setActiveTab = function (tabName) {
+            $scope.activeTab = tabName;
         };
 
         initialize();
