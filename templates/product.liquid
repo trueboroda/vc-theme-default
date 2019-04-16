@@ -189,10 +189,8 @@
           {% if review.is_active %}
             <p>
             {{ review.content }}
-            <br/>
-            <time pubdate datetime = "{{review.created_date | date: '%y-%m-%d'}}">
-                <em class="text-light"> {{review.created_date | date: format: 'month_day_year'}} </em>
-            </time>
+            <br/>            
+                <em class="text-light"> {{review.created_date | date: format: 'long' }} </em>            
             </p>
           {% endif %}
         {% endfor %}
