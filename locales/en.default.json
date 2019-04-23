@@ -721,9 +721,17 @@
             "quantity": "Quantity",
             "add_to_cart": "Add to Cart",
             "details_tab": "Product details",
-            "reviews_tab":  "Reviews",
+            "reviews_tab": "Reviews",
             "vat": "Inc VAT",
             "subscription_period": "Subscription with a period:"
+        },
+        "customer_reviews": {
+            "create": "Create new review",
+            "cancel": "Reset",
+            "content_label": "Review text",
+            "feedback_question": "Did you like this review helpful?",
+            "like_button": "Yes",
+            "dislike_button": "No"
         },
         "compare_list": {
             "add_to_compare": "Add to compare",

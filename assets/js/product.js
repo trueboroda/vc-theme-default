@@ -12,8 +12,7 @@ storefrontApp.controller('productController', ['$rootScope', '$scope', '$window'
             properties: 'properties',
             reviews: 'reviews'
         }
-
-        $scope.activeTab = null;
+        
         $scope.selectedVariation = {};
         $scope.allVariationPropsMap = {};
         $scope.productPrice = null;
@@ -21,6 +20,10 @@ storefrontApp.controller('productController', ['$rootScope', '$scope', '$window'
         $scope.addToWishlistDisabled = false;
         $scope.availableLists = null;
         $scope.listType = null;
+        $scope.customersRating = null;
+        $scope.activeTab = null;
+        $scope.newCustomerRreview = null;
+
 
         $scope.addProductToCart = function (product, quantity) {
             var dialogData = toDialogDataModel(product, quantity);
@@ -86,8 +89,7 @@ storefrontApp.controller('productController', ['$rootScope', '$scope', '$window'
                     $scope.checkProperty(propertyMap[x][0]);
                 });
 
-                $scope.selectedVariation = product;
-
+                $scope.selectedVariation = product;                
                 //set start tab
                 $scope.activeTab = product.properties.length > 0 ? tabsKind.properties : tabsKind.reviews;
             });
@@ -156,6 +158,26 @@ storefrontApp.controller('productController', ['$rootScope', '$scope', '$window'
         $scope.setActiveTab = function (tabName) {
             $scope.activeTab = tabName;
         };
+
+
+        
+
+        $scope.createNewReview = function () {
+            console.log($scope.newCustomerRreview);
+        }
+
+        $scope.resetNewReview = function () {
+            $scope.newCustomerRreview = {
+                id: null,
+                rating: 0,
+                content: "",
+                authorNickname: customer.name,
+                productId: $scope.selectedVariation.id
+            };
+
+            form.$setPristine();
+            form.$setUntouched();
+        }
 
         initialize();
     }]);

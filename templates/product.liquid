@@ -31,7 +31,7 @@
 
     <div class="grid-item large--three-fifths">
         <h2 itemprop="name">{{ product.title }}</h2>
-
+       
         <div itemprop="offers" itemscope itemtype="http://schema.org/Offer">
 
             {% assign variant = product.selected_or_first_available_variant %}
@@ -98,12 +98,27 @@
                     {% endif %}
                 </li>
 
+
+
                 {% if settings.product_reviews_enable %}
                 <li class="product-meta--review">
                     <span class="shopify-product-reviews-badge" data-id="{{ product.id }}"></span>
                 </li>
                 {% endif %}
+                <li>
+                 {% if shop.customer_reviews_enabled %}                 
+                    <uib-rating ng-model="selectedVariation.customersRating" max="5" readonly="true" state-on="'fa fa-star'" state-off="'fa fa-star-o'"></uib-rating>
+                 {% endif %}
+                 </li>                 
             </ul>
+           
+
+            {% comment %}
+            <star-rating ng-model="selectedVariation.customersRating" max="5" readonly="true"></star-rating>
+            <pre>{% raw %}{{selectedVariation.customersRating}} {% endraw %}</pre>
+            <uib-rating ng-model="selectedVariation.customersRating" max="5" readonly="true" state-on="'fa fa-star'" state-off="'fa fa-star-o'"></uib-rating>
+            {% raw %} <uib-rating ng-model="selectedVariation.customersRating" max="5" readonly="true" state-on="'glyphicon-ok-sign'" state-off="'glyphicon-ok-circle'"></uib-rating> {% endraw %}
+            {% endcomment %}
 
             <hr id="variantBreak" class="hr--clear hr--small">
 
@@ -164,6 +179,8 @@
 
        
         <ul class="tabs">
+
+        
          {% if product.properties.size > 0 %}
             <li ng-class="{'active': isActiveTab('properties') }">
                 <a ng-click="setActiveTab('properties')">{{ 'products.product.details_tab' | t }}</a>
@@ -194,8 +211,10 @@
         {% if shop.customer_reviews_enabled %}
         <div ng-show="isActiveTab('reviews')" class="tab-cnt">
             <div class="tab">
+
+            {% paginate product.customer_reviews by 5 %}
                 {% if product.customer_reviews.size > 0 %}                
-                    {% for review in product.customer_reviews limit: 5 %}
+                    {% for review in product.customer_reviews %}
                         {% if review.is_active %}
                         <p>
                             {{ review.content }}
@@ -205,6 +224,23 @@
                         {% endif %}
                     {% endfor %}
                 {% endif %}
+
+                {% if paginate.pages > 1 %}
+                    <div class="text-center">
+                      {% include 'pagination-custom' %}
+                    </div>
+                {% endif %}
+            {% endpaginate %}
+            {% if customer.is-registered-user  %}
+                <form name="reviewForm" novalidate>
+                    <uib-rating ng-model="newCustomerReview.rating" name="rating" max="5" readonly="true" state-on="'fa fa-star'" state-off="'fa fa-star-o'"></uib-rating>
+                    {{ 'products.customer_reviews.content_label' | t}}
+                    <textarea ng-model="newCustomerReview.content" name="content" required></textarea>
+                    <button  class="btn btn-clearfix" type="button" ng-click="resetNewReview(reviewForm)"/>
+                    <input ng-disabled="reviewForm.$invalid && reviewForm.$touched" class="btn btn-clearfix" type="submit" ng-click="createNewReview()" />
+                    <p class="text-warning" ng-show="reviewForm.$error && reviewForm.$touched">Заполните обязательные поля!</p>
+                </form>
+            {% endif %}
             </div>
         </div>
         {% endif %}
