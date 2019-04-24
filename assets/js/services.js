@@ -21,6 +21,20 @@ storefrontApp.service('dialogService', ['$uibModal', function ($uibModal) {
     }
 }]);
 
+
+storefrontApp.service('customerReviewService', ['$http', function ($http) {
+   
+    return {
+        saveCustomerEvaluation: function(evaluation) {
+            return $http.put('storefrontapi/customerreviews/evaluation', evaluation);
+        },
+
+        createCustomerReview:  function (customerReview) {
+            return $http.post('storefrontapi/customerreviews', customerReview);
+        }
+    }
+}]);
+
 storefrontApp.service('feedbackService', ['$http', function ($http) {
     return {
         postFeedback: function (data) {
@@ -57,11 +71,12 @@ storefrontApp.service('compareProductService', ['$http', '$localStorage', functi
     return {
         isInProductCompareList: function(productId) {
             var containProduct;
-            if (!_.some($localStorage['productCompareListIds'], function(id) { return id === productId })) {
+            if (!_.some($localStorage['productCompareListIds'], function (id) { return id === productId })) {
                 containProduct = false;
             }
-            else
-                containProduct = true
+            else {
+                containProduct = true;
+            }
             return containProduct;
         },
         addProduct: function(productId) {

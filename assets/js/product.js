@@ -19,8 +19,7 @@ storefrontApp.controller('productController', ['$rootScope', '$scope', '$window'
         $scope.productPriceLoaded = false;
         $scope.addToWishlistDisabled = false;
         $scope.availableLists = null;
-        $scope.listType = null;
-        //$scope.customersRating = null;
+        $scope.listType = null;        
         $scope.activeTab = null;
         $scope.newCustomerReview = {};
 
@@ -93,7 +92,7 @@ storefrontApp.controller('productController', ['$rootScope', '$scope', '$window'
                 //set start tab
                 $scope.activeTab = product.properties.length > 0 ? tabsKind.properties : tabsKind.reviews;
                 if ($scope.customer.isRegisteredUser) {
-                    $scope.resetNewReview();
+                   resetNewReview();
                 }
             });
         };
@@ -164,29 +163,40 @@ storefrontApp.controller('productController', ['$rootScope', '$scope', '$window'
 
 
         
+      
+        $scope.resetNewReview = resetNewReview;
+        function resetNewReview(form) {
 
-        $scope.createNewReview = function (form) {
-            //console.log($scope.newCustomerReview);
-            customerReviewService.createCustomerReview(newCustomerReview)
-                .then(function (response) {
-                    console.log('success added');
-                    constole.log(response.data);
-                    $scope.ressetNewReview();
-                });
-        }
+            $scope.newCustomerReview = {
+                id: null,
+                rating: null,
+                content: "",
+                authorNickname: $scope.customer.userName,
+                productId: $scope.selectedVariation.id
+            };
 
-        $scope.resetNewReview = function (form) {
-            
-            $scope.newCustomerReview.id = null;
-            $scope.newCustomerReview.rating = 0;
-            $scope.newCustomerReview.content = "";
-            $scope.newCustomerReview.authorNickname = $scope.customer.userName;
-            $scope.newCustomerReview.productId = $scope.selectedVariation.id;
-            
-            if (form) {                
+            if (form) {
                 form.$setPristine();
                 form.$setUntouched();
             }
+        }
+
+
+        $scope.createNewReview = function (form) {
+
+            customerReviewService.createCustomerReview($scope.newCustomerReview)
+                .then(function (response) {                    
+                    $scope.ressetNewReview(form);
+                });
+        }
+      
+
+        $scope.isThumpUp = function (evaluation) {
+            return !!evaluation && evaluation.reviewIsLiked;
+        }
+
+        $scope.isThumpDown = function (evaluation) {
+            return !!evaluation && !evaluation.reviewIsLiked;
         }
 
         initialize();

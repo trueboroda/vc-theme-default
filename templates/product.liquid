@@ -110,15 +110,7 @@
                     <uib-rating ng-model="selectedVariation.customersRating" max="5" readonly="true" state-on="'fa fa-star'" state-off="'fa fa-star-o'"></uib-rating>
                  {% endif %}
                  </li>                 
-            </ul>
-           
-
-            {% comment %}
-            <star-rating ng-model="selectedVariation.customersRating" max="5" readonly="true"></star-rating>
-            <pre>{% raw %}{{selectedVariation.customersRating}} {% endraw %}</pre>
-            <uib-rating ng-model="selectedVariation.customersRating" max="5" readonly="true" state-on="'fa fa-star'" state-off="'fa fa-star-o'"></uib-rating>
-            {% raw %} <uib-rating ng-model="selectedVariation.customersRating" max="5" readonly="true" state-on="'glyphicon-ok-sign'" state-off="'glyphicon-ok-circle'"></uib-rating> {% endraw %}
-            {% endcomment %}
+            </ul>                      
 
             <hr id="variantBreak" class="hr--clear hr--small">
 
@@ -212,12 +204,27 @@
         <div ng-show="isActiveTab('reviews')" class="tab-cnt">
             <div class="tab">
 
-            {% paginate product.customer_reviews by 5 %}
+            {% paginate product.customer_reviews by 10 %}
                 {% if product.customer_reviews.size > 0 %}                
                     {% for review in product.customer_reviews %}                        
                         <h4>{{ review.author_nickname }}</h4>
-                        <div ng-init="reviewRating_{{review.id}} = {{review.rating}}">
-                            <uib-rating ng-model="reviewRating_{{review.id}}" max="5" readonly="true" state-on="'fa fa-star'" state-off="'fa fa-star-o'"></uib-rating> {{review.rating}}
+                        <div ng-init="reviewRating_{{review.id}} = {{review.rating}}; reviewEvaluation_{{review.id}}='{{review.evaluation | json}}' ">
+                            <div style="display:inline-block;">
+                                <uib-rating ng-model="reviewRating_{{review.id}}" max="5" readonly="true" state-on="'fa fa-star'" state-off="'fa fa-star-o'"></uib-rating>
+                            </div>
+                            <div style="display:inline-block;">
+                                <em  style="font-size: small;">{{'products.customer_reviews.feedback_question'| t}}</em>
+                                                               
+                                <span class="fa"
+                                      ng-class="{'fa-thumbs-up': isThumpUp(reviewEvaluation_{{review.id}}), 'fa-thumbs-o-up': !isThumbUp(reviewEvaluation_{{review.id}}) }">
+                                      {{review.like_count}}
+                                </span>
+
+                                <span class="fa" 
+                                      ng-class="{'fa-thumbs-down': isThumpDown(reviewEvaluation_{{review.id}}), 'fa-thumbs-o-down': !isThumbDown(reviewEvaluation_{{review.id}}) }">
+                                      {{review.dislike_count}}
+                                </span>                                
+                            </div>
                         </div>
                         <p>
                             {{ review.content }}
@@ -242,12 +249,12 @@
                     <uib-rating ng-model="newCustomerReview.rating" name="rating" max="5" state-on="'fa fa-star'" state-off="'fa fa-star-o'" required></uib-rating>
                     <label> {{ 'products.customer_reviews.content_label' | t}} </label>
                     <textarea ng-model="newCustomerReview.content" name="content" required></textarea>
-                    <button class="btn btn-clearfix" type="button" ng-click="resetNewReview(reviewForm)">{{'products.customer_reviews.cancel' | t}}</button>
+                    <button class="btn-secondary btn-clearfix" type="button" ng-click="resetNewReview(reviewForm)">{{'products.customer_reviews.cancel' | t}}</button>
                     <button class="btn btn-clearfix" type="button" ng-disabled="reviewForm.$invalid"  ng-click="createNewReview(reviewForm)">{{'products.customer_reviews.create' | t}}</button>
-                    <p class="text-warning" ng-show="reviewForm.$error && reviewForm.$dirty">Заполните обязательные поля!</p>
+                    <p class="text-warning" ng-show="reviewForm.$error && reviewForm.content.$touched">Заполните обязательные поля!</p>
                     
                 </form>               
-                 <p>{% raw %} {{reviewForm}} {% endraw %}</p>
+                {% comment %}<p>{% raw %} {{reviewForm.$error}} {% endraw %}</p>{% endcomment %}
                 </div>
             </div>
         </div>
