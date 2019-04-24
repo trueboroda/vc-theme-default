@@ -214,14 +214,16 @@
 
             {% paginate product.customer_reviews by 5 %}
                 {% if product.customer_reviews.size > 0 %}                
-                    {% for review in product.customer_reviews %}
-                        {% if review.is_active %}
+                    {% for review in product.customer_reviews %}                        
+                        <h4>{{ review.author_nickname }}</h4>
+                        <div ng-init="reviewRating_{{review.id}} = {{review.rating}}">
+                            <uib-rating ng-model="reviewRating_{{review.id}}" max="5" readonly="true" state-on="'fa fa-star'" state-off="'fa fa-star-o'"></uib-rating> {{review.rating}}
+                        </div>
                         <p>
                             {{ review.content }}
                             <br/>            
                             <em class="text-light"> {{review.created_date | date: format: 'long' }} </em>            
-                        </p>
-                        {% endif %}
+                        </p>                        
                     {% endfor %}
                 {% endif %}
 
@@ -231,16 +233,22 @@
                     </div>
                 {% endif %}
             {% endpaginate %}
-            {% if customer.is-registered-user  %}
+
+            {% comment %}<pre> {{customer}}</pre>{% endcomment %}
+
+                <div ng-if="customer.isRegisteredUser">
+                <hr/>
                 <form name="reviewForm" novalidate>
-                    <uib-rating ng-model="newCustomerReview.rating" name="rating" max="5" readonly="true" state-on="'fa fa-star'" state-off="'fa fa-star-o'"></uib-rating>
-                    {{ 'products.customer_reviews.content_label' | t}}
+                    <uib-rating ng-model="newCustomerReview.rating" name="rating" max="5" state-on="'fa fa-star'" state-off="'fa fa-star-o'" required></uib-rating>
+                    <label> {{ 'products.customer_reviews.content_label' | t}} </label>
                     <textarea ng-model="newCustomerReview.content" name="content" required></textarea>
-                    <button  class="btn btn-clearfix" type="button" ng-click="resetNewReview(reviewForm)"/>
-                    <input ng-disabled="reviewForm.$invalid && reviewForm.$touched" class="btn btn-clearfix" type="submit" ng-click="createNewReview()" />
-                    <p class="text-warning" ng-show="reviewForm.$error && reviewForm.$touched">Заполните обязательные поля!</p>
-                </form>
-            {% endif %}
+                    <button class="btn btn-clearfix" type="button" ng-click="resetNewReview(reviewForm)">{{'products.customer_reviews.cancel' | t}}</button>
+                    <button class="btn btn-clearfix" type="button" ng-disabled="reviewForm.$invalid"  ng-click="createNewReview(reviewForm)">{{'products.customer_reviews.create' | t}}</button>
+                    <p class="text-warning" ng-show="reviewForm.$error && reviewForm.$dirty">Заполните обязательные поля!</p>
+                    
+                </form>               
+                 <p>{% raw %} {{reviewForm}} {% endraw %}</p>
+                </div>
             </div>
         </div>
         {% endif %}

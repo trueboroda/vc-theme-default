@@ -1,7 +1,7 @@
 var storefrontApp = angular.module('storefrontApp');
 
-storefrontApp.controller('productController', ['$rootScope', '$scope', '$window', 'dialogService', 'catalogService', 'cartService', 'quoteRequestService', 'customerService', 'listService', '$localStorage',
-    function ($rootScope, $scope, $window, dialogService, catalogService, cartService, quoteRequestService, customerService, listService, $localStorage) {
+storefrontApp.controller('productController', ['$rootScope', '$scope', '$window', 'dialogService', 'catalogService', 'cartService', 'quoteRequestService', 'customerReviewService',
+    function ($rootScope, $scope, $window, dialogService, catalogService, cartService, quoteRequestService, customerReviewService) {
         //TODO: prevent add to cart not selected variation
         // display validator please select property
         // display price range
@@ -20,9 +20,9 @@ storefrontApp.controller('productController', ['$rootScope', '$scope', '$window'
         $scope.addToWishlistDisabled = false;
         $scope.availableLists = null;
         $scope.listType = null;
-        $scope.customersRating = null;
+        //$scope.customersRating = null;
         $scope.activeTab = null;
-        $scope.newCustomerRreview = null;
+        $scope.newCustomerReview = {};
 
 
         $scope.addProductToCart = function (product, quantity) {
@@ -92,6 +92,9 @@ storefrontApp.controller('productController', ['$rootScope', '$scope', '$window'
                 $scope.selectedVariation = product;                
                 //set start tab
                 $scope.activeTab = product.properties.length > 0 ? tabsKind.properties : tabsKind.reviews;
+                if ($scope.customer.isRegisteredUser) {
+                    $scope.resetNewReview();
+                }
             });
         };
 
@@ -162,21 +165,28 @@ storefrontApp.controller('productController', ['$rootScope', '$scope', '$window'
 
         
 
-        $scope.createNewReview = function () {
-            console.log($scope.newCustomerRreview);
+        $scope.createNewReview = function (form) {
+            //console.log($scope.newCustomerReview);
+            customerReviewService.createCustomerReview(newCustomerReview)
+                .then(function (response) {
+                    console.log('success added');
+                    constole.log(response.data);
+                    $scope.ressetNewReview();
+                });
         }
 
-        $scope.resetNewReview = function () {
-            $scope.newCustomerRreview = {
-                id: null,
-                rating: 0,
-                content: "",
-                authorNickname: customer.name,
-                productId: $scope.selectedVariation.id
-            };
-
-            form.$setPristine();
-            form.$setUntouched();
+        $scope.resetNewReview = function (form) {
+            
+            $scope.newCustomerReview.id = null;
+            $scope.newCustomerReview.rating = 0;
+            $scope.newCustomerReview.content = "";
+            $scope.newCustomerReview.authorNickname = $scope.customer.userName;
+            $scope.newCustomerReview.productId = $scope.selectedVariation.id;
+            
+            if (form) {                
+                form.$setPristine();
+                form.$setUntouched();
+            }
         }
 
         initialize();
