@@ -207,6 +207,10 @@ storefrontApp.controller('productController', ['$rootScope', '$scope', '$window'
         }
 
         $scope.likeReview = function (review, isLike) {
+            if (!$scope.customer.isRegisteredUser) {
+                return;
+            }
+
             if (angular.isUndefined(isLike)) {
                 isLike = true;
             }

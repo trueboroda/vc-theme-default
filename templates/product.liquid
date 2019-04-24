@@ -200,11 +200,12 @@
         {% endif %}
         {% if shop.customer_reviews_enabled %}
         <div ng-show="isActiveTab('reviews')" class="tab-cnt">
-            <div class="tab">
+            <div class="tab customer-reviews">
 
             {% paginate product.customer_reviews by 10 %}
                 {% if product.customer_reviews.size > 0 %}                
-                    {% for review in product.customer_reviews %}                        
+                    {% for review in product.customer_reviews %}
+                     <div class="customer-review">
                         <h4>{{ review.author_nickname }}</h4>
                          
                         <div ng-init='review_{{review.id}} = {{review | json2 }} '>                                               
@@ -212,16 +213,16 @@
                                 <uib-rating ng-model="review_{{review.id}}.rating" max="5" readonly="true" state-on="'fa fa-star'" state-off="'fa fa-star-o'"></uib-rating>
                             </div>
                             <div style="display:inline-block;">
-                                <em  style="font-size: small;">{{'products.customer_reviews.feedback_question'| t}}</em>
+                                <em style="font-size: small;">{{'products.customer_reviews.feedback_question'| t}}</em>
                                                                
-                                <span class="fa" 
+                                <span class="fa like-button" 
                                       ng-bind="review_{{review.id}}.likeCount" 
                                       ng-class="{'fa-thumbs-up': isThumpUp(review_{{review.id}}.currentUserEvaluation), 'fa-thumbs-o-up': !isThumbUp(review_{{review.id}}.currentUserEvaluation) }"
                                       ng-click="likeReview(review_{{review.id}})"                                      
                                       >                                      
                                 </span>
 
-                                <span class="fa" cursor="pointer"
+                                <span class="fa like-button" 
                                       ng-bind="review_{{review.id}}.dislikeCount"
                                       ng-class="{'fa-thumbs-down': isThumpDown(review_{{review.id}}.currentUserEvaluation), 'fa-thumbs-o-down': !isThumbDown(review_{{review.id}}.currentUserEvaluation) }"
                                       ng-click="dislikeReview(review_{{review.id}})"
@@ -234,7 +235,8 @@
                             {{ review.content }}
                             <br/>            
                             <em class="text-light"> {{review.created_date | date: format: 'month_day_year' }} </em>            
-                        </p>                        
+                        </p>
+                      </div>   
                     {% endfor %}
                 {% endif %}
 
