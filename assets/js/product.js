@@ -12,14 +12,14 @@ storefrontApp.controller('productController', ['$rootScope', '$scope', '$window'
             properties: 'properties',
             reviews: 'reviews'
         }
-        
+
         $scope.selectedVariation = {};
         $scope.allVariationPropsMap = {};
         $scope.productPrice = null;
         $scope.productPriceLoaded = false;
         $scope.addToWishlistDisabled = false;
         $scope.availableLists = null;
-        $scope.listType = null;        
+        $scope.listType = null;
         $scope.activeTab = null;
         $scope.newCustomerReview = {};
 
@@ -52,8 +52,8 @@ storefrontApp.controller('productController', ['$rootScope', '$scope', '$window'
                 $rootScope.$broadcast('actualQuoteRequestItemsChanged');
             });
         };
-        
-        $scope.initAvailableLists = function(lists) {
+
+        $scope.initAvailableLists = function (lists) {
             $scope.listType = lists.default_list_type;
         }
 
@@ -88,11 +88,11 @@ storefrontApp.controller('productController', ['$rootScope', '$scope', '$window'
                     $scope.checkProperty(propertyMap[x][0]);
                 });
 
-                $scope.selectedVariation = product;                
+                $scope.selectedVariation = product;
                 //set start tab
                 $scope.activeTab = product.properties.length > 0 ? tabsKind.properties : tabsKind.reviews;
                 if ($scope.customer.isRegisteredUser) {
-                   resetNewReview();
+                    resetNewReview();
                 }
             });
         };
@@ -162,8 +162,7 @@ storefrontApp.controller('productController', ['$rootScope', '$scope', '$window'
         };
 
 
-        
-      
+
         $scope.resetNewReview = resetNewReview;
         function resetNewReview(form) {
 
@@ -185,19 +184,67 @@ storefrontApp.controller('productController', ['$rootScope', '$scope', '$window'
         $scope.createNewReview = function (form) {
 
             customerReviewService.createCustomerReview($scope.newCustomerReview)
-                .then(function (response) {                    
-                    $scope.ressetNewReview(form);
+                .then(function () {
+
+                    resetNewReview(form);
                 });
-        }
-      
+        };
+
 
         $scope.isThumpUp = function (evaluation) {
             return !!evaluation && evaluation.reviewIsLiked;
-        }
+        };
 
         $scope.isThumpDown = function (evaluation) {
             return !!evaluation && !evaluation.reviewIsLiked;
+        };
+
+        //class for customers review evaluation
+        function CustomerReviewEvaluation(customerId, customerReviewId, reviewIsLiked) {
+            this.customerId = customerId;
+            this.customerReviewId = customerReviewId;
+            this.reviewIsLiked = reviewIsLiked;
         }
+
+        $scope.likeReview = function (review, isLike) {
+            if (angular.isUndefined(isLike)) {
+                isLike = true;
+            }
+
+            var productId = $scope.selectedVariation.id;
+            if (!review.currentUserEvaluation) {
+                review.currentUserEvaluation = new CustomerReviewEvaluation($scope.customer.id, review.id, isLike);
+
+                customerReviewService.saveCustomerEvaluation(review.currentUserEvaluation, productId).then(function (response) {
+                    review.currentUserEvaluation = response.data;
+                    if (isLike) {
+                        review.likeCount++;
+                    } else {
+                        review.dislikeCount++;
+                    }
+                });
+            } else {
+                if (review.currentUserEvaluation.reviewIsLiked === isLike) {
+                    return;
+                } else {
+                    review.currentUserEvaluation.reviewIsLiked = isLike
+                    customerReviewService.saveCustomerEvaluation(review.currentUserEvaluation, productId).then(function (response) {
+                        review.currentUserEvaluation = response.data;
+                        if (isLike) {
+                            review.likeCount++;
+                            review.dislikeCount--;
+                        } else {
+                            review.likeCount--;
+                            review.dislikeCount++;
+                        }
+                    });
+                }
+            }
+        };
+
+        $scope.dislikeReview = function (review) {
+            $scope.likeReview(review, false);
+        };
 
         initialize();
     }]);

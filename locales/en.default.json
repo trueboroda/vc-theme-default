@@ -728,6 +728,7 @@
         "customer_reviews": {
             "create": "Create new review",
             "cancel": "Reset",
+            "create_fill_required": "Fill all required fields!",
             "content_label": "Review text",
             "feedback_question": "Did you like this review helpful?",
             "like_button": "Yes",

@@ -25,8 +25,8 @@ storefrontApp.service('dialogService', ['$uibModal', function ($uibModal) {
 storefrontApp.service('customerReviewService', ['$http', function ($http) {
    
     return {
-        saveCustomerEvaluation: function(evaluation) {
-            return $http.put('storefrontapi/customerreviews/evaluation', evaluation);
+        saveCustomerEvaluation: function(evaluation, productId) {
+            return $http.put('storefrontapi/customerreviews/evaluation/' + productId, evaluation);
         },
 
         createCustomerReview:  function (customerReview) {
