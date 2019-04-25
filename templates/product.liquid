@@ -202,8 +202,7 @@
         <div ng-show="isActiveTab('reviews')" class="tab-cnt">
             <div class="tab customer-reviews">
 
-            {% paginate product.customer_reviews by 10 %}
-                {% if product.customer_reviews.size > 0 %}                
+            {% paginate product.customer_reviews by 5 %}               
                     {% for review in product.customer_reviews %}
                      <div class="customer-review">
                         <h4>{{ review.author_nickname }}</h4>
@@ -237,8 +236,7 @@
                             <em class="text-light"> {{review.created_date | date: format: 'month_day_year' }} </em>            
                         </p>
                       </div>   
-                    {% endfor %}
-                {% endif %}
+                    {% endfor %}                
 
             {% if paginate.pages > 1 %}
                     <div class="text-center">
@@ -250,17 +248,17 @@
 
             {% comment %}<pre> {{customer}}</pre>{% endcomment %}
 
-                <div ng-if="customer.isRegisteredUser">
-                <hr/>
-                <form name="reviewForm" novalidate>
-                    <uib-rating ng-model="newCustomerReview.rating" name="rating" max="5" state-on="'fa fa-star'" state-off="'fa fa-star-o'" required></uib-rating>
-                    <label> {{ 'products.customer_reviews.content_label' | t}} </label>
-                    <textarea ng-model="newCustomerReview.content" name="content" required></textarea>
-                    <button class="btn-secondary btn-clearfix" type="button" ng-click="resetNewReview(reviewForm)">{{'products.customer_reviews.cancel' | t}}</button>
-                    <button class="btn btn-clearfix" type="button" ng-disabled="reviewForm.$invalid"  ng-click="createNewReview(reviewForm)">{{'products.customer_reviews.create' | t}}</button>
-                    <p class="text-warning" ng-show="reviewForm.$error && reviewForm.content.$touched">{{'products.customer_reviews.create_fill_required' | t}}</p>
+                <div id="customer-review-create" ng-if="customer.isRegisteredUser">
+                    <hr/>
+                    <form name="reviewForm" novalidate>
+                        <uib-rating ng-model="newCustomerReview.rating" name="rating" max="5" state-on="'fa fa-star'" state-off="'fa fa-star-o'" required></uib-rating>
+                        <label> {{ 'products.customer_reviews.content_label' | t}} </label>
+                        <textarea ng-model="newCustomerReview.content" name="content" required></textarea>
+                        <button class="btn-secondary btn-clearfix" type="button" ng-click="resetNewReview(reviewForm)">{{'products.customer_reviews.cancel' | t}}</button>
+                        <button class="btn btn-clearfix" type="button" ng-disabled="reviewForm.$invalid"  ng-click="createNewReview(reviewForm)">{{'products.customer_reviews.create' | t}}</button>
+                        <p class="text-warning" ng-show="reviewForm.$error && reviewForm.content.$touched">{{'products.customer_reviews.create_fill_required' | t}}</p>
                     
-                </form>               
+                    </form>               
                 {% comment %}<p>{% raw %} {{reviewForm.$error}} {% endraw %}</p>{% endcomment %}
                 </div>
             </div>
