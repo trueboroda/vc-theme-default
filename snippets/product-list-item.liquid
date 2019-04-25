@@ -55,6 +55,11 @@
                 <div class="product-item--price text-center" ng-if="!productPricesLoaded">
                     <p class="h1 medium-down--left">
                         {% include 'price' with product.price %}
+                       {% if shop.customer_reviews_enabled %}
+                       <div>
+                             <uib-rating ng-model="product.customersRating" max="5" readonly="true" state-on="'fa fa-star'" state-off="'fa fa-star-o'"></uib-rating>
+                        </div>
+                       {% endif %}
                     </p>
                     {% if on_sale %}
                         <span class="sale-tag medium-down--right{% if settings.product_reviews_enable %} has-reviews{% endif %}">
@@ -63,9 +68,11 @@
                             {% include 'price-sale' %}
                         </span>
                     {% endif %}
+                    
                     {% if settings.product_reviews_enable %}
                         <span class="shopify-product-reviews-badge" data-id="{{ product.id }}"></span>
                     {% endif %}
+                   
                 </div>
 
                 <div class="product-item--price text-center" ng-if="productPricesLoaded">

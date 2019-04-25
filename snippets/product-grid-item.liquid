@@ -117,5 +117,10 @@
         {% if settings.product_reviews_enable %}
             <span class="shopify-product-reviews-badge" data-id="{{ product.id }}"></span>
         {% endif %}
+        {% if shop.customer_reviews_enabled %}
+         <div>
+               <uib-rating ng-model="product.customersRating" max="5" readonly="true" state-on="'fa fa-star'" state-off="'fa fa-star-o'"></uib-rating>
+         </div>
+        {% endif %}
     </a>
 </div>
