@@ -83,16 +83,16 @@
                     </h1>
                         {% else %}
                         </div>
-                            {% endif %} 
-                </div>                           
-            
+                            {% endif %}
+                </div>
+
             <div class="grid-item large--two-third text-center large--text-right">
-                
+
                 <div class="site-header--text-links{% if settings.header_message.empty? == false %} medium-down--hide{% endif %}">
                     {% if settings.header_message.empty? == false %}
                       {{ settings.header_message }}
                     {% endif %}
-                    
+
                     <span class="site-header--meta-links medium-down--hide">
                         <span ng-if="customer && customer.isRegisteredUser && customer.operatorUserName" ng-cloak>
                             {{ 'layout.customer.logged_in_on_behalf_of_label' | t }} <a href="{{ 'account' | absolute_url }}" ng-bind="customer.firstName || customer.userName"></a> &middot; {{ 'layout.customer.log_out' | t | customer_logout_link }}
@@ -109,7 +109,7 @@
 
                 </div>
                 <br class="medium-down--hide" />
-                
+
                 {% include 'search-bar' %}
                 {% if settings.product_compare_enabled %}
                 <product-compare-list-bar></product-compare-list-bar>
@@ -145,6 +145,23 @@
             </a>
         </div>
     </div>
+    <div id="store-dev-mode-notifier">
+        <div class="container flex-container">
+            <div class="title">Сайт находится в состоянии разработки! <br>Вы можете сделать заказ или <br>получить консультацию, связявшись с нами. </div>
+            <div class="contacts flex-container">
+                <div class="img "><img src="{{ "contact_us_woman.jpg" | asset_url }}" alt=""></div>
+                <div style="min-width: 270px">
+                    <div>
+                        <div class="contact "><a href="tel:88336140500"><i class="fa fa-phone" aria-hidden="true"></i> 8(83361) 4-05-00</a></div>
+                        <div class="contact"><a href="tel:88336124728"><i class="fa fa-phone" aria-hidden="true"></i> 8(83361) 2-47-28</a></div>
+                        <div class="contact"></i><a href="mailto:domus43@mail.ru "><i class="fa fa-envelope" aria-hidden="true"></i> domus43@mail.ru </a>
+                        <div class="contact"></i><a href="mailto:info@domus43.ru "><i class="fa fa-envelope" aria-hidden="true"></i> info@domus43.ru </a>
+                    </div>
+                </div>
+                </div>
+        </div>
+    </div>
+    <div style="clear:both"></div>
     <main class="wrapper main-content" role="main">
         {{ content_for_layout }}
     </main>
